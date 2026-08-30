@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Admin / authentication
+// ---------------------------------------------------------------------------
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin") // "admin" | "editor"
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  activities ActivityLog[]
+
+  @@map("admin_users")
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  action      String
+  detail      String?
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+// ---------------------------------------------------------------------------
+// CMS content
+// ---------------------------------------------------------------------------
+
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model Service {
+  id              String  @id @default(cuid())
+  title           String
+  slug            String  @unique
+  icon            String? // lucide icon key (e.g. "drafting-compass")
+  image           String?
+  shortDescription String
+  description     String // markdown
+  benefits        Json? // string[]
+  process         Json? // { title, description }[]
+  isPublished     Boolean @default(true)
+  featured        Boolean @default(false)
+  sortOrder       Int     @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@map("services")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  location    String
+  description String
+  category    String // Residential | Commercial | Industrial | Infrastructure | Renovation | Other
+  year        Int?
+  client      String?
+  status      String        @default("completed") // completed | ongoing | planning
+  image       String?
+  featured    Boolean       @default(false)
+  isPublished Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  images ProjectImage[]
+
+  @@index([isPublished, category])
+  @@index([isPublished, featured])
+  @@map("projects")
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  url       String
+  caption   String?
+  sortOrder Int     @default(0)
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_images")
+}
+
+model BlogCategory {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  posts     BlogPost[]
+  createdAt DateTime   @default(now())
+
+  @@map("blog_categories")
+}
+
+model BlogPost {
+  id            String       @id @default(cuid())
+  title         String
+  slug          String       @unique
+  image         String?
+  excerpt       String
+  content       String // markdown
+  author        String       @default("SAAJ Partners and Consult")
+  categoryId    String?
+  category      BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags          Json? // string[]
+  isPublished   Boolean      @default(true)
+  publishedAt   DateTime?
+  seoTitle      String?
+  seoDescription String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([isPublished, publishedAt])
+  @@index([categoryId])
+  @@map("blog_posts")
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  role        String?
+  company     String?
+  content     String
+  rating      Int?     @default(5)
+  image       String?
+  isPublished Boolean  @default(true)
+  isDemo      Boolean  @default(false) // flagged as sample content, not a real client
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@map("testimonials")
+}
+
+// ---------------------------------------------------------------------------
+// Public submissions
+// ---------------------------------------------------------------------------
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  isReplied Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([isRead, createdAt])
+  @@map("contact_messages")
+}
+
+model Appointment {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String?
+  company       String?
+  preferredDate DateTime
+  preferredTime String
+  service       String
+  projectType   String?
+  message       String?
+  status        String   @default("pending") // pending | approved | rejected | rescheduled | completed
+  adminNotes    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("appointments")
+}
+
+model QuoteRequest {
+  id                   String   @id @default(cuid())
+  name                 String
+  email                String
+  phone                String?
+  company              String?
+  projectType          String?
+  projectLocation      String?
+  estimatedBudget      String?
+  preferredStartDate   DateTime?
+  serviceRequired      String?
+  projectDescription   String
+  attachmentUrl        String?
+  attachmentName       String?
+  status               String   @default("new") // new | reviewing | contacted | quoted | approved | rejected | completed
+  adminNotes           String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("quote_requests")
+}
+
+// ---------------------------------------------------------------------------
+// Media library
+// ---------------------------------------------------------------------------
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  mimeType  String
+  size      Int
+  alt       String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("media")
+}
