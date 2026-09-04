@@ -63,11 +63,11 @@ async function main() {
       favicon: "",
     },
     socials: {
-      facebook: "",
-      twitter: "",
-      instagram: "",
-      linkedin: "",
-      youtube: "",
+      facebook: "https://facebook.com/",
+      twitter: "https://twitter.com/",
+      instagram: "https://instagram.com/",
+      linkedin: "https://linkedin.com/",
+      youtube: "https://youtube.com/",
     },
     seo: {
       titleTemplate: "%s | SAAJ Partners and Consult",

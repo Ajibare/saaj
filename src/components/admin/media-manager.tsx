@@ -22,19 +22,23 @@ export function MediaManager({ initial }: { initial: MediaItem[] }) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function onUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const selected = event.target.files?.[0];
+    const selected = Array.from(event.target.files ?? []);
     event.target.value = "";
-    if (!selected) return;
+    if (selected.length === 0) return;
 
     setUploading(true);
     try {
       const body = new FormData();
-      body.append("file", selected);
+      for (const file of selected) body.append("file", file);
       const response = await fetch("/api/media", { method: "POST", body });
       const data = await response.json();
-      if (data.ok && data.item) {
-        setItems((prev) => [data.item, ...prev]);
-        toast.success("Uploaded to the media library.");
+      if (data.ok && Array.isArray(data.items) && data.items.length > 0) {
+        setItems((prev) => [...data.items, ...prev]);
+        toast.success(
+          data.message
+            ? `${data.items.length} uploaded. ${data.message}`
+            : `${data.items.length} file(s) uploaded to the media library.`
+        );
       } else {
         toast.error(data.message ?? "Upload failed.");
       }
@@ -77,11 +81,18 @@ export function MediaManager({ initial }: { initial: MediaItem[] }) {
       <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-600">
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {uploading ? "Uploading…" : "Upload new image"}
-          <input type="file" accept="image/*" className="sr-only" onChange={onUpload} disabled={uploading} />
+          {uploading ? "Uploading…" : "Upload images"}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/gif,image/webp,image/avif,image/svg+xml"
+            multiple
+            className="sr-only"
+            onChange={onUpload}
+            disabled={uploading}
+          />
         </label>
         <p className="mt-3 text-xs text-slate-400">
-          Max 10 MB. PNG, JPG, WebP or SVG. Once uploaded, images can be reused across the website.
+          Max 4 MB each. PNG, JPG, JPEG, WebP, GIF, AVIF or SVG. You can select multiple files at once.
         </p>
       </div>
 

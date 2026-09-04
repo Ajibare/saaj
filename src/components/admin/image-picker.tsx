@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { ImagePlus, Images, X } from "lucide-react";
+import { ImagePlus, Images, Loader2, Upload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Lets the admin either paste an image URL directly or pick one from the
- * uploaded media library. On selection it calls onChange with the chosen URL.
+ * Lets the admin paste an image URL directly, upload a new image, or pick one
+ * from the uploaded media library. On selection it calls onChange with the URL.
  */
 export function ImagePicker({
   value,
@@ -18,6 +18,37 @@ export function ImagePicker({
   onChange: (url: string) => void;
   placeholder?: string;
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  async function onUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const selected = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (selected.length === 0) return;
+
+    setUploading(true);
+    try {
+      const body = new FormData();
+      for (const file of selected) body.append("file", file);
+      const response = await fetch("/api/media", { method: "POST", body });
+      const data = await response.json();
+      if (data.ok && Array.isArray(data.items) && data.items.length > 0) {
+        onChange(data.items[0].url);
+        toast.success(
+          data.items.length > 1
+            ? `${data.items.length} images uploaded to the media library.`
+            : "Image uploaded."
+        );
+      } else {
+        toast.error(data.message ?? "Upload failed.");
+      }
+    } catch {
+      toast.error("Upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <div className="space-y-2">
       <input
@@ -25,6 +56,15 @@ export function ImagePicker({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+      />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/gif,image/webp,image/avif,image/svg+xml"
+        multiple
+        className="hidden"
+        onChange={onUpload}
+        disabled={uploading}
       />
       <div className="flex items-center gap-3">
         {value ? (
@@ -35,6 +75,15 @@ export function ImagePicker({
             className="h-14 w-20 rounded-lg border border-slate-200 object-cover"
           />
         ) : null}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-brand-400 hover:text-brand-700 disabled:opacity-60"
+        >
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          {uploading ? "Uploading…" : "Upload"}
+        </button>
         <MediaPickerButton value={value} onSelect={onChange} />
       </div>
     </div>

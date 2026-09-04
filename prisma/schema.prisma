@@ -228,6 +228,7 @@ model Media {
   mimeType  String
   size      Int
   alt       String?
+  data      Bytes?
   createdAt DateTime @default(now())
 
   @@index([createdAt])

@@ -220,11 +220,11 @@ export const DEFAULT_SEO_SETTINGS = {
 };
 
 export const DEFAULT_SOCIAL_SETTINGS = {
-  facebook: "",
-  twitter: "",
-  instagram: "",
-  linkedin: "",
-  youtube: "",
+  facebook: "https://facebook.com/",
+  twitter: "https://twitter.com/",
+  instagram: "https://instagram.com/",
+  linkedin: "https://linkedin.com/",
+  youtube: "https://youtube.com/",
 };
 
 // ---------------------------------------------------------------------------
