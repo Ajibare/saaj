@@ -59,9 +59,7 @@ export function SiteFooter({ general, socials, services }: SiteFooterProps) {
           <Link href="/" className="group inline-block">
             <Logo
               src={general.logo}
-              text="SAAJ Partners & Consult"
-              textClassName="text-white"
-              imageClassName="h-11 w-11"
+              imageClassName="h-[100px] w-[200px]"
             />
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-slate-400">
@@ -78,7 +76,7 @@ export function SiteFooter({ general, socials, services }: SiteFooterProps) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-white/5 text-slate-300 transition-colors hover:bg-brand-600 hover:text-white"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-white/5 text-slate-300 transition-colors hover:bg-accent-500 hover:text-white"
                 >
                   <svg
                     viewBox="0 0 24 24"

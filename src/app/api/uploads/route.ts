@@ -6,6 +6,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_VIDEO_SIZE = 120 * 1024 * 1024; // 120 MB for videos
 
 const ALLOWED: Record<string, string[]> = {
   "image/png": ["png"],
@@ -19,7 +20,18 @@ const ALLOWED: Record<string, string[]> = {
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ["xlsx"],
   "application/zip": ["zip"],
   "application/x-zip-compressed": ["zip"],
+  "video/mp4": ["mp4"],
+  "video/webm": ["webm"],
+  "video/quicktime": ["mov"],
+  "video/x-m4v": ["m4v"],
 };
+
+const VIDEO_TYPES = new Set([
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+  "video/x-m4v",
+]);
 
 function extensionFor(mimeType: string): string | undefined {
   return ALLOWED[mimeType]?.[0];
@@ -43,9 +55,17 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, message: "No file provided." }, { status: 400 });
   }
 
-  if (file.size > MAX_SIZE) {
+  const isVideo = VIDEO_TYPES.has(file.type);
+  const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_SIZE;
+
+  if (file.size > maxSize) {
     return Response.json(
-      { ok: false, message: "File is too large. Maximum size is 10 MB." },
+      {
+        ok: false,
+        message: isVideo
+          ? "Video is too large. Maximum size is 120 MB."
+          : "File is too large. Maximum size is 10 MB.",
+      },
       { status: 413 }
     );
   }

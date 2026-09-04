@@ -4,10 +4,22 @@
  * describe the concrete shapes each setting record is expected to hold.
  */
 
+export interface HeroVideo {
+  url: string;
+  poster?: string;
+}
+
+export interface PartnerLogo {
+  name: string;
+  image?: string;
+  url?: string;
+}
+
 export interface HeroSettings {
   title: string;
   subtitle: string;
   image: string;
+  videos: HeroVideo[];
   primaryCtaLabel: string;
   secondaryCtaLabel: string;
 }
@@ -51,6 +63,11 @@ export interface HomeSettings {
     title: string;
     heading: string;
     steps: ProcessStep[];
+  };
+  partners: {
+    title: string;
+    heading: string;
+    logos: PartnerLogo[];
   };
   cta: {
     title: string;

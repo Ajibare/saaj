@@ -238,6 +238,15 @@ export const homeSettingsSchema = z.object({
     title: z.string().trim().min(2).max(200),
     subtitle: z.string().trim().min(2).max(1000),
     image: z.string().trim().max(500).optional().or(z.literal("")),
+    videos: z
+      .array(
+        z.object({
+          url: z.string().trim().min(1).max(1000),
+          poster: z.string().trim().max(500).optional().or(z.literal("")),
+        }),
+      )
+      .optional()
+      .default([]),
     primaryCtaLabel: z.string().trim().max(80).optional().or(z.literal("")),
     secondaryCtaLabel: z.string().trim().max(80).optional().or(z.literal("")),
   }),
@@ -276,6 +285,17 @@ export const homeSettingsSchema = z.object({
       z.object({
         title: z.string().trim().min(1),
         description: z.string().trim().min(1),
+      }),
+    ),
+  }),
+  partners: z.object({
+    title: z.string().trim().max(120).optional().or(z.literal("")),
+    heading: z.string().trim().max(200).optional().or(z.literal("")),
+    logos: z.array(
+      z.object({
+        name: z.string().trim().min(1),
+        image: z.string().trim().max(500).optional().or(z.literal("")),
+        url: z.string().trim().max(500).optional().or(z.literal("")),
       }),
     ),
   }),

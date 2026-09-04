@@ -24,7 +24,7 @@ export function WhyChooseUs({
               <span className="absolute right-4 top-4 text-4xl font-bold text-slate-100 transition-colors group-hover:text-brand-50">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-600 group-hover:text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-accent-500 group-hover:text-white">
                 <IconByName name={item.icon} size={24} />
               </div>
               <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.title}</h3>

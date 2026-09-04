@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -12,7 +12,7 @@ datasource db {
 // ---------------------------------------------------------------------------
 
 model AdminUser {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   email        String   @unique
   passwordHash String
@@ -27,12 +27,12 @@ model AdminUser {
 }
 
 model ActivityLog {
-  id          String   @id @default(cuid())
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   action      String
   detail      String?
-  adminUserId String?
+  adminUserId String?   @db.ObjectId
   adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
 
   @@index([createdAt])
   @@map("activity_logs")
@@ -43,7 +43,7 @@ model ActivityLog {
 // ---------------------------------------------------------------------------
 
 model SiteSetting {
-  key       String   @id
+  key       String   @id @map("_id")
   value     Json
   updatedAt DateTime @updatedAt
 
@@ -51,7 +51,7 @@ model SiteSetting {
 }
 
 model Service {
-  id              String  @id @default(cuid())
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
   title           String
   slug            String  @unique
   icon            String? // lucide icon key (e.g. "drafting-compass")
@@ -71,7 +71,7 @@ model Service {
 }
 
 model Project {
-  id          String        @id @default(cuid())
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   slug        String        @unique
   location    String
@@ -94,18 +94,18 @@ model Project {
 }
 
 model ProjectImage {
-  id        String  @id @default(cuid())
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   url       String
   caption   String?
   sortOrder Int     @default(0)
-  projectId String
+  projectId String  @db.ObjectId
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@map("project_images")
 }
 
 model BlogCategory {
-  id        String     @id @default(cuid())
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   slug      String     @unique
   posts     BlogPost[]
@@ -115,14 +115,14 @@ model BlogCategory {
 }
 
 model BlogPost {
-  id            String       @id @default(cuid())
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
   title         String
   slug          String       @unique
   image         String?
   excerpt       String
   content       String // markdown
   author        String       @default("SAAJ Partners and Consult")
-  categoryId    String?
+  categoryId    String?      @db.ObjectId
   category      BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   tags          Json? // string[]
   isPublished   Boolean      @default(true)
@@ -138,7 +138,7 @@ model BlogPost {
 }
 
 model Testimonial {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   role        String?
   company     String?
@@ -160,7 +160,7 @@ model Testimonial {
 // ---------------------------------------------------------------------------
 
 model ContactMessage {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String
   phone     String?
@@ -175,7 +175,7 @@ model ContactMessage {
 }
 
 model Appointment {
-  id            String   @id @default(cuid())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   email         String
   phone         String?
@@ -195,7 +195,7 @@ model Appointment {
 }
 
 model QuoteRequest {
-  id                   String   @id @default(cuid())
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
   name                 String
   email                String
   phone                String?
@@ -222,7 +222,7 @@ model QuoteRequest {
 // ---------------------------------------------------------------------------
 
 model Media {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   filename  String
   url       String
   mimeType  String

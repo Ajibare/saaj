@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="SAAJ Partners and Consult">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0f2452"/>
-      <stop offset="0.55" stop-color="#164dbb"/>
-      <stop offset="1" stop-color="#1d63e0"/>
+      <stop offset="0" stop-color="#001534"/>
+      <stop offset="0.55" stop-color="#0a2a55"/>
+      <stop offset="1" stop-color="#123a75"/>
     </linearGradient>
     <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
       <path d="M64 0H0V64" fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
@@ -25,7 +25,7 @@
     <rect x="930" y="260" width="140" height="640"/>
     <rect x="1100" y="500" width="200" height="400"/>
   </g>
-  <g fill="none" stroke="#0b1f3a" stroke-width="2" opacity="0.25">
+  <g fill="none" stroke="#001534" stroke-width="2" opacity="0.25">
     <line x1="120" y1="470" x2="270" y2="470"/><line x1="300" y1="360" x2="410" y2="360"/>
     <line x1="440" y1="520" x2="620" y2="520"/><line x1="650" y1="300" x2="780" y2="300"/>
     <line x1="930" y1="260" x2="1070" y2="260"/><line x1="1100" y1="500" x2="1300" y2="500"/>

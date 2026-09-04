@@ -27,7 +27,7 @@ export default function SiteError({
         <button
           type="button"
           onClick={retry}
-          className="mt-6 inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+          className="mt-6 inline-flex items-center justify-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
         >
           Try again
         </button>

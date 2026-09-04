@@ -9,17 +9,20 @@ import {
   FileText,
   Images,
   Inbox,
-  LayoutDashboard,
+      LayoutDashboard,
   LogOut,
   Menu,
   MessageSquareQuote,
   Newspaper,
+  Home,
+  Info,
   Settings,
   Wrench,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/lib/actions/auth";
+import { BwToggle } from "@/components/bw-toggle";
 import { Logo } from "@/components/site/logo";
 import type { AdminSession } from "@/lib/auth";
 
@@ -33,6 +36,8 @@ const NAV_LINKS = [
   { href: "/admin/blog", label: "Blog", icon: Newspaper },
   { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { href: "/admin/media", label: "Media", icon: Images },
+  { href: "/admin/home", label: "Website Content", icon: Home },
+  { href: "/admin/about", label: "About", icon: Info },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ] as const;
 
@@ -134,6 +139,7 @@ export function AdminShell({
             </span>
           </div>
           <div className="flex items-center gap-3">
+            <BwToggle className="border-slate-200 text-slate-600 hover:bg-slate-100" />
             <div className="hidden text-right sm:block">
               <p className="text-sm font-semibold leading-tight text-slate-800">{admin.name}</p>
               <p className="text-xs text-slate-500">{admin.email}</p>

@@ -35,7 +35,7 @@ export function BlogCard({ post }: { post: BlogCardData }) {
         <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
           {post.publishedAt ? formatDate(post.publishedAt) : ""}
         </p>
-        <h3 className="mt-2 text-lg font-semibold leading-snug text-slate-900 transition-colors group-hover:text-brand-700">
+        <h3 className="mt-2 text-lg font-semibold leading-snug text-slate-900 transition-colors group-hover:text-accent-600">
           {post.title}
         </h3>
         {post.excerpt ? (
@@ -43,7 +43,7 @@ export function BlogCard({ post }: { post: BlogCardData }) {
             {truncate(post.excerpt, 120)}
           </p>
         ) : null}
-        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600">
           Read article
           <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </span>

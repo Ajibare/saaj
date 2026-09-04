@@ -25,12 +25,12 @@ export function ServiceCard({ service }: { service: ServiceCardData }) {
           className="h-full w-full transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-        <div className="absolute bottom-3 left-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-600 text-white shadow-md transition-colors group-hover:bg-brand-700">
+        <div className="absolute bottom-3 left-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-600 text-white shadow-md transition-colors group-hover:bg-accent-600">
           <IconByName name={service.icon} size={20} />
         </div>
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-brand-700">
+        <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-accent-600">
           {service.title}
         </h3>
         {service.shortDescription ? (
@@ -38,7 +38,7 @@ export function ServiceCard({ service }: { service: ServiceCardData }) {
             {truncate(service.shortDescription, 130)}
           </p>
         ) : null}
-        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600">
           Learn more
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </span>

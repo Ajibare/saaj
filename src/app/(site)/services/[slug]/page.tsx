@@ -139,7 +139,7 @@ export default async function ServiceDetailPage({ params }: Params) {
                       className="group flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-brand-50 hover:text-brand-700"
                     >
                       {s.title}
-                      <ArrowRight className="h-4 w-4 text-slate-300 transition-colors group-hover:text-brand-600" />
+                      <ArrowRight className="h-4 w-4 text-slate-300 transition-colors group-hover:text-accent-500" />
                     </Link>
                   </li>
                 ))}
@@ -152,7 +152,7 @@ export default async function ServiceDetailPage({ params }: Params) {
               </p>
               <Link
                 href="/request-a-quote"
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
               >
                 Request a Quote
                 <ArrowRight className="h-4 w-4" />

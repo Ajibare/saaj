@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
+import { LoadingSplash } from "@/components/site/loading-splash";
 import { getSiteSettings } from "@/lib/settings";
 import { prisma } from "@/lib/prisma";
 
@@ -23,6 +24,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-screen flex-col">
+      <LoadingSplash />
       <SiteHeader general={general} />
       <main className="flex-1">{children}</main>
       <SiteFooter general={general} socials={socials} services={services} />

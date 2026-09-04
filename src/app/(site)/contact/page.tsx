@@ -76,7 +76,7 @@ export default async function ContactPage() {
               </p>
               <a
                 href="/appointment"
-                className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-brand-600 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-600 hover:text-white"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-brand-600 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:border-accent-500 hover:bg-accent-500 hover:text-white"
               >
                 Book an Appointment
               </a>

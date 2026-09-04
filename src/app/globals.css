@@ -2,34 +2,69 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --navy: #0b1f3a;
+  --background: #f8feff;
+  --foreground: #0b1f3a;
+  --navy: #001534;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-navy: #0b1f3a;
-  --color-navy-800: #10294d;
+  --color-navy: #001534;
+  --color-navy-800: #0a2a55;
 
-  --color-brand-50: #eef6ff;
-  --color-brand-100: #d9ecff;
-  --color-brand-200: #bcddff;
-  --color-brand-300: #8ec8ff;
-  --color-brand-400: #59a8ff;
-  --color-brand-500: #3385f2;
-  --color-brand-600: #1d63e0;
-  --color-brand-700: #164dbb;
-  --color-brand-800: #183f96;
-  --color-brand-900: #18387a;
-  --color-brand-950: #0f2452;
+  --color-brand-50: #eef3f9;
+  --color-brand-100: #dce6f2;
+  --color-brand-200: #b9cbe3;
+  --color-brand-300: #8ba8cc;
+  --color-brand-400: #537bb0;
+  --color-brand-500: #2c548f;
+  --color-brand-600: #001534;
+  --color-brand-700: #01142f;
+  --color-brand-800: #010f26;
+  --color-brand-900: #000c1e;
+  --color-brand-950: #000715;
+
+  --color-accent-50: #fdf7ea;
+  --color-accent-100: #faeac7;
+  --color-accent-200: #f4d392;
+  --color-accent-300: #eebb5c;
+  --color-accent-400: #e7a334;
+  --color-accent-500: #e0931f;
+  --color-accent-600: #c27c17;
+  --color-accent-700: #9c6113;
+  --color-accent-800: #77490f;
+  --color-accent-900: #53330a;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --animate-fade-up: fade-up 0.6s ease-out both;
   --animate-fade-in: fade-in 0.5s ease-out both;
+
+  --animate-splashbar: splashbar 1.3s ease-in-out infinite;
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes splashbar {
+    0% {
+      width: 0%;
+    }
+    50% {
+      width: 100%;
+    }
+    100% {
+      width: 0%;
+    }
+  }
 
   @keyframes fade-up {
     from {
@@ -57,6 +92,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+html.bw,
+html.bw body {
+  filter: grayscale(1);
 }
 
 @layer base {

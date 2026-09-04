@@ -50,7 +50,7 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
           ) : null}
         </div>
       </div>
-      <div className="flex items-center justify-between px-4 py-3 text-sm font-semibold text-brand-600">
+      <div className="flex items-center justify-between px-4 py-3 text-sm font-semibold text-accent-500">
         <span>View project</span>
         <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </div>

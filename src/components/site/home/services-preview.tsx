@@ -32,7 +32,7 @@ export function ServicesPreview({ services }: { services: ServiceCardData[] }) {
         <div className="mt-10 text-center">
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 rounded-lg border border-brand-600 px-6 py-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-600 hover:text-white"
+            className="inline-flex items-center gap-2 rounded-lg border border-brand-600 px-6 py-3 text-sm font-semibold text-brand-700 transition-colors hover:border-accent-500 hover:bg-accent-500 hover:text-white"
           >
             View All Services
             <ArrowRight className="h-4 w-4" />

@@ -25,7 +25,7 @@ export function Intro({ intro }: { intro: IntroSettings }) {
           </div>
         </div>
         <div className="order-1 lg:order-2">
-          <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-brand-600">
+          <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-accent-500">
             Who We Are
           </span>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -54,7 +54,7 @@ export function Intro({ intro }: { intro: IntroSettings }) {
           </ul>
           <Link
             href="/about"
-            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
           >
             {intro.ctaLabel || "About Us"}
             <ArrowRight className="h-4 w-4" />

@@ -99,6 +99,7 @@ async function main() {
         subtitle:
           "SAAJ Partners and Consult is a dynamic construction, consulting, and project management firm delivering innovative, cost-effective, and quality-driven solutions across the built environment.",
         image: P.hero,
+        videos: [],
         primaryCtaLabel: "Request a Quote",
         secondaryCtaLabel: "Our Services",
       },
@@ -143,6 +144,11 @@ async function main() {
           { title: "Construction", description: "Professional execution with rigorous attention to quality, safety, efficiency and durability." },
           { title: "Project Delivery", description: "Handover, commissioning and aftercare — delivering a completed asset that performs as promised." },
         ],
+      },
+      partners: {
+        title: "Our Partners",
+        heading: "Trusted by the Companies We Work With",
+        logos: [],
       },
       cta: {
         title: "Have a Project in Mind?",
@@ -606,10 +612,8 @@ async function main() {
   // 8. Activity log
   // -------------------------------------------------------------------------
   const admin = await prisma.adminUser.findUnique({ where: { email: adminEmail } });
-  await prisma.activityLog.createMany({
-    data: [
-      { action: "Seeded database", detail: "Initial demo content and settings created.", adminUserId: admin?.id },
-    ],
+  await prisma.activityLog.create({
+    data: { action: "Seeded database", detail: "Initial demo content and settings created.", adminUserId: admin?.id },
   });
   console.log("✔ Activity log seeded.");
 }

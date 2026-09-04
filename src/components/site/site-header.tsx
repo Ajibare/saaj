@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { Logo } from "@/components/site/logo";
+import { BwToggle } from "@/components/bw-toggle";
 import { NAV_LINKS } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import type { GeneralSettings } from "@/lib/types";
@@ -58,10 +59,7 @@ export function SiteHeader({ general }: SiteHeaderProps) {
           <Link href="/" className="group">
             <Logo
               src={general.logo}
-              text="SAAJ Partners & Consult"
-              textClassName="text-slate-900"
-              imageClassName="h-11 w-11"
-              className="max-w-[240px]"
+              imageClassName="h-[150px] w-[150px]"
             />
           </Link>
 
@@ -95,11 +93,12 @@ export function SiteHeader({ general }: SiteHeaderProps) {
           <div className="flex items-center gap-3">
             <Link
               href="/request-a-quote"
-              className="hidden items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 sm:inline-flex"
+              className="hidden items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-600 sm:inline-flex"
             >
               Request a Quote
               <ChevronRight className="h-4 w-4" />
             </Link>
+            <BwToggle className="border-slate-200 text-slate-700 hover:bg-slate-50" />
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
@@ -138,10 +137,17 @@ export function SiteHeader({ general }: SiteHeaderProps) {
                   </Link>
                 );
               })}
+              <div className="mt-1 flex items-center gap-3 border-t border-slate-200 pt-4">
+                <BwToggle
+                  className="border-slate-200 text-slate-700 hover:bg-slate-50"
+                  onNavigate={() => setOpen(false)}
+                />
+                <span className="text-sm text-slate-500">Black & white / color</span>
+              </div>
               <Link
                 href="/request-a-quote"
                 onClick={() => setOpen(false)}
-                className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-3 text-sm font-semibold text-white"
+                className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-accent-600"
               >
                 Request a Quote
                 <ChevronRight className="h-4 w-4" />

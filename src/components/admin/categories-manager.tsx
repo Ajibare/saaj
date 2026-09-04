@@ -74,7 +74,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
                     type="button"
                     disabled={pending}
                     onClick={() => saveEdit(category)}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white hover:bg-accent-600 disabled:opacity-50"
                   >
                     <Save className="h-4 w-4" />
                     Save
@@ -143,7 +143,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
           type="button"
           disabled={pending || editingId !== null}
           onClick={saveNew}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-accent-600 disabled:opacity-50"
         >
           <Plus className="h-4 w-4" />
           Add

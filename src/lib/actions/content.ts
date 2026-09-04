@@ -151,33 +151,27 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Ac
   const parsed = projectSchema.safeParse(input);
   if (!parsed.success) return actionError("Please correct the errors below.", z.flattenError(parsed.error).fieldErrors);
   try {
-    await prisma.$transaction(async (tx) => {
-      await tx.project.update({
-        where: { id },
-        data: {
-          name: parsed.data.name,
-          slug: parsed.data.slug,
-          location: parsed.data.location,
-          description: parsed.data.description,
-          category: parsed.data.category,
-          year: parsed.data.year ?? null,
-          client: parsed.data.client || null,
-          status: parsed.data.status,
-          image: parsed.data.image || null,
-          featured: parsed.data.featured,
-          isPublished: parsed.data.isPublished,
-        },
-      });
-      await tx.projectImage.deleteMany({ where: { projectId: id } });
-      if (parsed.data.gallery.length) {
-        await tx.projectImage.createMany({
-          data: parsed.data.gallery.map((url, index) => ({
-            projectId: id,
-            url,
-            sortOrder: index,
-          })),
-        });
-      }
+    await prisma.project.update({
+      where: { id },
+      data: {
+        name: parsed.data.name,
+        slug: parsed.data.slug,
+        location: parsed.data.location,
+        description: parsed.data.description,
+        category: parsed.data.category,
+        year: parsed.data.year ?? null,
+        client: parsed.data.client || null,
+        status: parsed.data.status,
+        image: parsed.data.image || null,
+        featured: parsed.data.featured,
+        isPublished: parsed.data.isPublished,
+        images: parsed.data.gallery.length
+          ? {
+              deleteMany: {},
+              create: parsed.data.gallery.map((url, index) => ({ url, sortOrder: index })),
+            }
+          : { deleteMany: {} },
+      },
     });
     await logActivity("Project updated", parsed.data.name);
     revalidateAll(["/admin/projects", "/", "/projects", `/projects/${parsed.data.slug}`]);

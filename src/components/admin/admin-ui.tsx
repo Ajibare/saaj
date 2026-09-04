@@ -99,7 +99,7 @@ export function ActionButton({
       disabled={disabled}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
-        variant === "primary" && "bg-brand-600 text-white hover:bg-brand-700",
+        variant === "primary" && "bg-brand-600 text-white hover:bg-accent-600",
         variant === "default" &&
           "bg-white text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50",
         variant === "danger" && "text-rose-600 ring-1 ring-inset ring-rose-200 hover:bg-rose-50",

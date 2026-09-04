@@ -43,6 +43,7 @@ export const DEFAULT_HOME_SETTINGS = {
     subtitle:
       "SAAJ Partners and Consult is a dynamic construction, consulting, and project management firm delivering innovative, cost-effective, and quality-driven solutions across the built environment.",
     image: PLACEHOLDER_IMAGES.hero,
+    videos: [],
     primaryCtaLabel: "Request a Quote",
     secondaryCtaLabel: "Our Services",
   },
@@ -146,6 +147,11 @@ export const DEFAULT_HOME_SETTINGS = {
           "Handover, commissioning and aftercare — delivering a completed asset that performs as promised.",
       },
     ],
+  },
+  partners: {
+    title: "Our Partners",
+    heading: "Trusted by the Companies We Work With",
+    logos: [],
   },
   cta: {
     title: "Have a Project in Mind?",

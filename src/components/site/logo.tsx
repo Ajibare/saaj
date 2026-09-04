@@ -24,7 +24,7 @@ export function Logo({
         src={src ?? "/images/logo-mark.svg"}
         alt={alt}
         className={cn(
-          "h-10 w-10 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105",
+          "h-100 w-100 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105",
           imageClassName
         )}
       />
