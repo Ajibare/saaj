@@ -55,10 +55,13 @@ export function signDestroyParams(publicId: string, resourceType: string): {
 } {
   const { apiSecret } = requireCloudinary();
   const timestamp = String(Math.floor(Date.now() / 1000));
-  const signature = sign(
-    { public_id: publicId, resource_type: resourceType, timestamp },
-    apiSecret
-  );
+  const params: Record<string, string> = { public_id: publicId, timestamp };
+  // Cloudinary treats "image" as the default resource type and excludes it from
+  // the signature string; only non-default types are part of the signing.
+  if (resourceType !== "image") {
+    params.resource_type = resourceType;
+  }
+  const signature = sign(params, apiSecret);
   return { timestamp, signature };
 }
 
