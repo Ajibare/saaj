@@ -229,6 +229,7 @@ model Media {
   size      Int
   alt       String?
   data      Bytes?
+  publicId  String?
   createdAt DateTime @default(now())
 
   @@index([createdAt])

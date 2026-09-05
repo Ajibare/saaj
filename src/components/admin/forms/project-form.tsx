@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Wand2, ArrowLeft } from "lucide-react";
+import { Wand2, ArrowLeft, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 import { PROJECT_CATEGORIES, PROJECT_STATUSES } from "@/lib/constants";
@@ -19,7 +19,8 @@ import {
   FormTextarea,
   SubmitButton,
 } from "@/components/site/form-fields";
-import { Toggle, TextArrayEditor } from "@/components/admin/form-controls";
+import { Toggle } from "@/components/admin/form-controls";
+import { ImagePicker } from "@/components/admin/image-picker";
 
 type FormValues = z.input<typeof projectSchema>;
 
@@ -135,24 +136,28 @@ export function ProjectForm({
         </FormField>
       </div>
 
-      <FormField label="Cover image URL (optional)" htmlFor="prj-image" error={errors.image?.message}>
-        <FormInput id="prj-image" placeholder="/images/placeholders/project.svg" {...register("image")} />
+      <FormField label="Cover image (optional)" error={errors.image?.message}>
+        <Controller
+          name="image"
+          control={control}
+          render={({ field }) => (
+            <ImagePicker value={field.value ?? ""} onChange={field.onChange} placeholder="Paste an image URL, upload, or pick from the media library" />
+          )}
+        />
       </FormField>
 
       <FormField label="Description" htmlFor="prj-desc" required error={errors.description?.message}>
         <FormTextarea id="prj-desc" rows={7} placeholder="Overview of the project…" aria-invalid={!!errors.description} {...register("description")} />
       </FormField>
 
-      <FormField label="Gallery (image URLs)">
+      <FormField label="Gallery">
         <Controller
           name="gallery"
           control={control}
           render={({ field }) => (
-            <TextArrayEditor
-              value={field.value ?? []}
+            <GalleryEditor
+              items={field.value ?? []}
               onChange={field.onChange}
-              placeholder="/images/….jpg"
-              addLabel="Add gallery image"
             />
           )}
         />
@@ -192,5 +197,56 @@ export function ProjectForm({
         </SubmitButton>
       </div>
     </form>
+  );
+}
+
+function GalleryEditor({
+  items,
+  onChange,
+}: {
+  items: string[];
+  onChange: (items: string[]) => void;
+}) {
+  function update(index: number, value: string) {
+    const next = [...items];
+    next[index] = value;
+    onChange(next);
+  }
+
+  return (
+    <div className="space-y-2">
+      {items.map((item, index) => (
+        <div key={index} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Image {index + 1}
+            </span>
+            <button
+              type="button"
+              onClick={() => onChange(items.filter((_, i) => i !== index))}
+              aria-label="Remove image"
+              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="mt-2">
+            <ImagePicker
+              value={item}
+              onChange={(url) => update(index, url)}
+              placeholder="Paste an image URL, upload, or pick from the media library"
+            />
+          </div>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => onChange([...items, ""])}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-brand-400 hover:text-brand-700"
+      >
+        <Plus className="h-4 w-4" />
+        Add gallery image
+      </button>
+    </div>
   );
 }

@@ -19,6 +19,7 @@ import {
   SubmitButton,
 } from "@/components/site/form-fields";
 import { Toggle, TextArrayEditor } from "@/components/admin/form-controls";
+import { ImagePicker } from "@/components/admin/image-picker";
 
 type FormValues = z.input<typeof blogPostSchema>;
 
@@ -121,8 +122,14 @@ export function BlogPostForm({
         </FormField>
       </div>
 
-      <FormField label="Cover image URL (optional)" htmlFor="post-image" error={errors.image?.message}>
-        <FormInput id="post-image" placeholder="/images/placeholders/blog.svg" {...register("image")} />
+      <FormField label="Cover image (optional)" error={errors.image?.message}>
+        <Controller
+          name="image"
+          control={control}
+          render={({ field }) => (
+            <ImagePicker value={field.value ?? ""} onChange={field.onChange} placeholder="Paste an image URL, upload, or pick from the media library" />
+          )}
+        />
       </FormField>
 
       <FormField label="Excerpt" htmlFor="post-excerpt" required error={errors.excerpt?.message}>

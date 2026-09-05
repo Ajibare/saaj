@@ -18,6 +18,7 @@ import {
   SubmitButton,
 } from "@/components/site/form-fields";
 import { Toggle, TextArrayEditor, ObjectArrayEditor } from "@/components/admin/form-controls";
+import { ImagePicker } from "@/components/admin/image-picker";
 
 type FormValues = z.input<typeof serviceSchema>;
 
@@ -113,8 +114,14 @@ export function ServiceForm({
         <FormField label="Icon key (optional)" htmlFor="svc-icon" error={errors.icon?.message} hint="lucide icon name, e.g. drafting-compass">
           <FormInput id="svc-icon" placeholder="drafting-compass" aria-invalid={!!errors.icon} {...register("icon")} />
         </FormField>
-        <FormField label="Image URL (optional)" htmlFor="svc-image" error={errors.image?.message}>
-          <FormInput id="svc-image" placeholder="/images/placeholders/service.svg" {...register("image")} />
+        <FormField label="Image (optional)" error={errors.image?.message}>
+          <Controller
+            name="image"
+            control={control}
+            render={({ field }) => (
+              <ImagePicker value={field.value ?? ""} onChange={field.onChange} placeholder="Paste an image URL, upload, or pick from the media library" />
+            )}
+          />
         </FormField>
       </div>
 

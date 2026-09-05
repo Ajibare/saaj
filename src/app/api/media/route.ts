@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { storeImage } from "@/lib/media-storage";
+import { storeFile } from "@/lib/media-storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, message: "No files provided." }, { status: 400 });
   }
 
-  const results = await Promise.all(files.map((file) => storeImage(file)));
+  const results = await Promise.all(files.map((file) => storeFile(file)));
   const items = results.filter((r): r is Extract<typeof r, { ok: true }> => r.ok).map((r) => r.item);
   const failed = results.length - items.length;
 

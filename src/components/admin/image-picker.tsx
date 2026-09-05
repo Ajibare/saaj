@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ImagePlus, Images, Loader2, Upload, X } from "lucide-react";
+import { uploadMediaFiles } from "@/lib/media-client";
 import { cn } from "@/lib/utils";
 
 /**
@@ -28,19 +29,20 @@ export function ImagePicker({
 
     setUploading(true);
     try {
-      const body = new FormData();
-      for (const file of selected) body.append("file", file);
-      const response = await fetch("/api/media", { method: "POST", body });
-      const data = await response.json();
-      if (data.ok && Array.isArray(data.items) && data.items.length > 0) {
-        onChange(data.items[0].url);
+      const result = await uploadMediaFiles(selected);
+      if (!result.ok) {
+        toast.error(result.message ?? "Upload failed.");
+        return;
+      }
+      if (result.items[0]) {
+        onChange(result.items[0].url);
         toast.success(
-          data.items.length > 1
-            ? `${data.items.length} images uploaded to the media library.`
+          result.items.length > 1
+            ? `${result.items.length} images uploaded to the media library.`
             : "Image uploaded."
         );
       } else {
-        toast.error(data.message ?? "Upload failed.");
+        toast.error("Upload failed.");
       }
     } catch {
       toast.error("Upload failed. Please try again.");
@@ -98,7 +100,7 @@ function MediaPickerButton({
   value?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState<{ id: string; url: string; alt: string | null }[]>([]);
+  const [items, setItems] = useState<{ id: string; url: string; alt: string | null; mimeType: string }[]>([]);
   const [loading, setLoading] = useState(false);
 
   async function load() {
@@ -173,12 +175,22 @@ function MediaPickerButton({
                       )}
                     >
                       <div className="aspect-square w-full overflow-hidden bg-slate-100">
-                        {/* eslint-disable-next-line @next/next/no-img-element -- image URLs may be SVGs */}
-                        <img
-                          src={item.url}
-                          alt={item.alt ?? ""}
-                          className="h-full w-full object-cover"
-                        />
+                        {item.mimeType?.startsWith("video/") ? (
+                          <video
+                            src={item.url}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element -- image URLs may be SVGs
+                          <img
+                            src={item.url}
+                            alt={item.alt ?? ""}
+                            className="h-full w-full object-cover"
+                          />
+                        )}
                       </div>
                       <p className="truncate px-2 py-1.5 text-xs text-slate-500">
                         {item.alt ?? item.url.split("/").pop()}

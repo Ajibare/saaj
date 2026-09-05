@@ -15,6 +15,7 @@ import {
   FormTextarea,
 } from "@/components/site/form-fields";
 import { ImagePicker } from "@/components/admin/image-picker";
+import { uploadMediaFiles } from "@/lib/media-client";
 import { cn } from "@/lib/utils";
 
 type FormValues = z.input<typeof homeSettingsSchema>;
@@ -561,17 +562,17 @@ function HeroVideosEditor({
   async function uploadVideo(index: number, file: File) {
     setUploading(index);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("alt", `Hero clip ${index + 1}`);
-      const res = await fetch("/api/media", { method: "POST", body: formData });
-      const data = await res.json();
-      if (!data.ok) {
-        toast.error(data.message ?? "Could not upload the video.");
+      const result = await uploadMediaFiles([file], `Hero clip ${index + 1}`);
+      if (!result.ok) {
+        toast.error(result.message ?? "Could not upload the video.");
         return;
       }
-      update(index, { url: data.url });
-      toast.success("Video uploaded.");
+      if (result.items[0]) {
+        update(index, { url: result.items[0].url });
+        toast.success("Video uploaded.");
+      } else {
+        toast.error("Could not upload the video.");
+      }
     } catch {
       toast.error("Could not upload the video.");
     } finally {

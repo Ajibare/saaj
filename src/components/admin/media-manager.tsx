@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Copy, Loader2, Trash2, Upload } from "lucide-react";
 import { deleteMedia } from "@/lib/actions/media";
+import { uploadMediaFiles } from "@/lib/media-client";
 import { formatDate } from "@/lib/utils";
 
 type MediaItem = {
@@ -28,19 +29,16 @@ export function MediaManager({ initial }: { initial: MediaItem[] }) {
 
     setUploading(true);
     try {
-      const body = new FormData();
-      for (const file of selected) body.append("file", file);
-      const response = await fetch("/api/media", { method: "POST", body });
-      const data = await response.json();
-      if (data.ok && Array.isArray(data.items) && data.items.length > 0) {
-        setItems((prev) => [...data.items, ...prev]);
+      const result = await uploadMediaFiles(selected);
+      if (result.ok) {
+        setItems((prev) => [...result.items, ...prev]);
         toast.success(
-          data.message
-            ? `${data.items.length} uploaded. ${data.message}`
-            : `${data.items.length} file(s) uploaded to the media library.`
+          result.failed > 0
+            ? `${result.items.length} uploaded. ${result.failed} file(s) could not be uploaded.`
+            : `${result.items.length} file(s) uploaded to the media library.`
         );
       } else {
-        toast.error(data.message ?? "Upload failed.");
+        toast.error(result.message ?? "Upload failed.");
       }
     } catch {
       toast.error("Upload failed. Please try again.");
@@ -75,16 +73,17 @@ export function MediaManager({ initial }: { initial: MediaItem[] }) {
   }
 
   const isImage = (mime: string) => mime.startsWith("image/");
+  const isVideo = (mime: string) => mime.startsWith("video/");
 
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-600">
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {uploading ? "Uploading…" : "Upload images"}
+          {uploading ? "Uploading…" : "Upload images or videos"}
           <input
             type="file"
-            accept="image/png,image/jpeg,image/gif,image/webp,image/avif,image/svg+xml"
+            accept="image/png,image/jpeg,image/gif,image/webp,image/avif,image/svg+xml,video/mp4,video/webm,video/quicktime,video/x-m4v"
             multiple
             className="sr-only"
             onChange={onUpload}
@@ -92,7 +91,7 @@ export function MediaManager({ initial }: { initial: MediaItem[] }) {
           />
         </label>
         <p className="mt-3 text-xs text-slate-400">
-          Max 4 MB each. PNG, JPG, JPEG, WebP, GIF, AVIF or SVG. You can select multiple files at once.
+          Max 50 MB each. PNG, JPG, JPEG, WebP, GIF, AVIF, SVG, MP4, WEBM or MOV. You can select multiple files at once.
         </p>
       </div>
 
@@ -112,6 +111,14 @@ export function MediaManager({ initial }: { initial: MediaItem[] }) {
                 {isImage(item.mimeType) ? (
                   // eslint-disable-next-line @next/next/no-img-element -- thumbnails may be SVGs
                   <img src={item.url} alt={item.alt ?? item.filename} className="h-full w-full object-cover" />
+                ) : isVideo(item.mimeType) ? (
+                  <video
+                    src={item.url}
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   <div className="flex h-full items-center justify-center text-4xl text-slate-300">
                     📄

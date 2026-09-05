@@ -17,6 +17,7 @@ import {
   SubmitButton,
 } from "@/components/site/form-fields";
 import { Toggle } from "@/components/admin/form-controls";
+import { ImagePicker } from "@/components/admin/image-picker";
 
 type FormValues = z.input<typeof testimonialSchema>;
 
@@ -110,8 +111,14 @@ export function TestimonialForm({
       </FormField>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <FormField label="Photo URL (optional)" htmlFor="t-image" error={errors.image?.message}>
-          <FormInput id="t-image" placeholder="/images/….jpg" {...register("image")} />
+        <FormField label="Photo (optional)" error={errors.image?.message}>
+          <Controller
+            name="image"
+            control={control}
+            render={({ field }) => (
+              <ImagePicker value={field.value ?? ""} onChange={field.onChange} placeholder="Paste a photo URL, upload, or pick from the media library" />
+            )}
+          />
         </FormField>
         <FormField label="Sort order" htmlFor="t-order" error={errors.sortOrder?.message}>
           <FormInput id="t-order" type="number" min={0} max={9999} {...register("sortOrder")} />
