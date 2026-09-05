@@ -108,7 +108,7 @@ function MediaPickerButton({
     try {
       const res = await fetch("/api/media?limit=100");
       const data = await res.json();
-      if (data.ok) setItems(data.items ?? []);
+      if (data.ok) setItems((data.items ?? []).filter((item: { mimeType?: string }) => item.mimeType?.startsWith("image/")));
     } catch {
       toast.error("Could not load the media library.");
     } finally {
