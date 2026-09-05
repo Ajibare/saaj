@@ -1,12 +1,11 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { randomBytes } from "node:crypto";
+import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
-const MAX_VIDEO_SIZE = 120 * 1024 * 1024; // 120 MB for videos
+const MAX_SIZE = 10 * 1024 * 1024;
+const MAX_MONGO_SIZE = 14 * 1024 * 1024;
 
 const ALLOWED: Record<string, string[]> = {
   "image/png": ["png"],
@@ -33,12 +32,8 @@ const VIDEO_TYPES = new Set([
   "video/x-m4v",
 ]);
 
-function extensionFor(mimeType: string): string | undefined {
-  return ALLOWED[mimeType]?.[0];
-}
-
 function sanitizeName(name: string): string {
-  const base = path.basename(name).replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 100);
+  const base = name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 100);
   return base || "file";
 }
 
@@ -56,21 +51,20 @@ export async function POST(request: Request) {
   }
 
   const isVideo = VIDEO_TYPES.has(file.type);
-  const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_SIZE;
-
-  if (file.size > maxSize) {
+  if (!isVideo && file.size > MAX_SIZE) {
     return Response.json(
-      {
-        ok: false,
-        message: isVideo
-          ? "Video is too large. Maximum size is 120 MB."
-          : "File is too large. Maximum size is 10 MB.",
-      },
+      { ok: false, message: "File is too large. Maximum size is 10 MB." },
+      { status: 413 }
+    );
+  }
+  if (file.size > MAX_MONGO_SIZE) {
+    return Response.json(
+      { ok: false, message: "Files above 14 MB can't be stored here. Please use a smaller file." },
       { status: 413 }
     );
   }
 
-  const ext = extensionFor(file.type);
+  const ext = ALLOWED[file.type]?.[0];
   if (!ext) {
     return Response.json(
       { ok: false, message: "File type is not allowed." },
@@ -78,20 +72,25 @@ export async function POST(request: Request) {
     );
   }
 
-  const uniqueName = `${Date.now()}-${randomBytes(4).toString("hex")}.${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-
   try {
-    await mkdir(uploadDir, { recursive: true });
+    const id = randomBytes(12).toString("hex");
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadDir, uniqueName), buffer);
+    const item = await prisma.fileUpload.create({
+      data: {
+        id,
+        filename: sanitizeName(file.name),
+        mimeType: file.type,
+        size: file.size,
+        data: buffer,
+      },
+    });
 
     return Response.json({
       ok: true,
-      url: `/uploads/${uniqueName}`,
-      name: sanitizeName(file.name),
-      size: file.size,
-      mimeType: file.type,
+      url: `/api/uploads/${item.id}`,
+      name: item.filename,
+      size: item.size,
+      mimeType: item.mimeType,
     });
   } catch (error) {
     console.error("Upload failed:", error);

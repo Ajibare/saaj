@@ -217,6 +217,20 @@ model QuoteRequest {
   @@map("quote_requests")
 }
 
+// Public file uploads from the Request-a-Quote form. Stored in the database
+// because serverless hosts (e.g. Vercel) do not offer a writable filesystem.
+model FileUpload {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  filename  String
+  mimeType  String
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("file_uploads")
+}
+
 // ---------------------------------------------------------------------------
 // Media library
 // ---------------------------------------------------------------------------
