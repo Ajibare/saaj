@@ -25,30 +25,34 @@ export type SeoSettingsInput = z.input<typeof seoSettingsSchema>;
 const json = (value: unknown): Prisma.InputJsonValue => value as unknown as Prisma.InputJsonValue;
 
 /**
- * Merge the provided patch into the existing settings record for a given key.
- * Full-section updates keep the rest of each record intact when only a
- * subgroup is submitted.
+ * Merge the provided patch into the existing settings record for a given key,
+ * then validate the complete merged record. The admin forms submit one section
+ * at a time (e.g. only `hero`), so the patch is validated against the full
+ * record after defaults/stored values are merged back in.
  */
 async function updateSetting(
   key: string,
   patch: Record<string, unknown>,
   schema: z.ZodTypeAny,
 ): Promise<ActionResult> {
-  const parsed = schema.safeParse(patch);
-  if (!parsed.success) {
-    return actionError(
-      "Please correct the errors below.",
-      z.flattenError(parsed.error).fieldErrors,
-    );
-  }
   try {
     const current = await getSiteSettings();
-    const existing = (current as unknown as Record<string, unknown>)[key] ?? {};
-    const merged = { ...(existing as object), ...(parsed.data as object) };
+    const existing = ((current as unknown as Record<string, unknown>)[key] ?? {}) as Record<
+      string,
+      unknown
+    >;
+    const merged = { ...existing, ...patch };
+    const parsed = schema.safeParse(merged);
+    if (!parsed.success) {
+      return actionError(
+        "Please correct the errors below.",
+        z.flattenError(parsed.error).fieldErrors,
+      );
+    }
     await prisma.siteSetting.upsert({
       where: { key },
-      update: { value: json(merged) },
-      create: { key, value: json(merged) },
+      update: { value: json(parsed.data) },
+      create: { key, value: json(parsed.data) },
     });
     revalidateAllSitePaths();
     return actionSuccess("Settings saved.");
