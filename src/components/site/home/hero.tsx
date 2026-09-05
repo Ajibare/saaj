@@ -24,11 +24,11 @@ export function Hero({ hero }: { hero: HeroSettings }) {
         <AppImage
           src={hero.image}
           alt=""
-          className="absolute inset-0 h-full w-full opacity-25"
+          className="absolute inset-0 h-full w-full opacity-40"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-br from-navy via-navy/85 to-brand-950/90" />
-      <div className="absolute inset-0 bg-black/20" />
+      <div className="absolute inset-0 bg-gradient-to-r from-navy/85 via-navy/50 to-navy/10" />
+      <div className="absolute inset-0 bg-black/10" />
 
       <div className="container-site relative flex min-h-[560px] flex-col justify-center py-24 lg:min-h-[620px]">
         <span className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-brand-400/30 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-200">
@@ -116,7 +116,7 @@ function VideoBackground({
       ref={videoRef}
       src={videos[active]?.url}
       poster={videos[active]?.poster ?? undefined}
-      className="absolute inset-0 h-full w-full object-cover opacity-40"
+      className="absolute inset-0 h-full w-full object-cover opacity-70"
       autoPlay
       muted
       loop
